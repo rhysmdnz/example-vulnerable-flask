@@ -53,7 +53,8 @@
                 {% for number, id, act in users %}
                         <tr>
                            <th> {{ number }} </th>
-                           <td> {{ id }} </td>
+                           <td> {{ id | safe }} </td>
+                            {# Only admins can set names so this is fine #}
                            <td><a href={{act}}>Delete</a></td>
                         </tr>
                         

@@ -31,17 +31,17 @@ def verify(id, pw):
     return result
 
 
-def delete_user_from_db(id):
+def delete_user_from_db(user_id):
     _conn = sqlite3.connect(user_db_file_location)
     _c = _conn.cursor()
-    _c.execute("DELETE FROM users WHERE id = ?;", (id))
+    _c.execute("DELETE FROM users WHERE id = ?", (user_id))
     _conn.commit()
     _conn.close()
 
     # when we delete a user FROM database USERS, we also need to delete all his or her notes data FROM database NOTES
     _conn = sqlite3.connect(note_db_file_location)
     _c = _conn.cursor()
-    _c.execute("DELETE FROM notes WHERE user = ?;", (id))
+    _c.execute("DELETE FROM notes WHERE user = ?", (user_id))
     _conn.commit()
     _conn.close()
 
@@ -50,7 +50,7 @@ def delete_user_from_db(id):
     # [2] delete all his or her images records FROM database IMAGES
     _conn = sqlite3.connect(image_db_file_location)
     _c = _conn.cursor()
-    _c.execute("DELETE FROM images WHERE owner = ?;", (id))
+    _c.execute("DELETE FROM images WHERE owner = ?;", (user_id))
     _conn.commit()
     _conn.close()
 
@@ -61,7 +61,7 @@ def add_user(id, pw):
 
     _c.execute(
         "INSERT INTO users values(?, ?)",
-        (id.upper(), hashlib.sha256(pw.encode()).hexdigest()),
+        (id, hashlib.sha256(pw.encode()).hexdigest()),
     )
 
     _conn.commit()
@@ -72,9 +72,7 @@ def read_note_from_db(id):
     _conn = sqlite3.connect(note_db_file_location)
     _c = _conn.cursor()
 
-    command = (
-        "SELECT note_id, timestamp, note FROM notes WHERE user = '" + id.upper() + "';"
-    )
+    command = "SELECT note_id, timestamp, note FROM notes WHERE user = '" + id + "';"
     _c.execute(command)
     result = _c.fetchall()
 
@@ -107,10 +105,10 @@ def write_note_into_db(id, note_to_write):
     _c.execute(
         "INSERT INTO notes values(?, ?, ?, ?)",
         (
-            id.upper(),
+            id,
             current_timestamp,
             note_to_write,
-            hashlib.sha1((id.upper() + current_timestamp).encode()).hexdigest(),
+            hashlib.sha1((id + current_timestamp).encode()).hexdigest(),
         ),
     )
 

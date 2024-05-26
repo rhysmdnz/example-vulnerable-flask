@@ -191,7 +191,7 @@ def fun_delete_image(image_uid):
 
 @app.route("/login", methods=["POST"])
 def fun_login():
-    id_submitted = request.form.get("id").upper()
+    id_submitted = request.form.get("id")
     if verify(id_submitted, request.form.get("pw")):
         session["current_user"] = id_submitted
 
@@ -221,7 +221,7 @@ def fun_delete_user(id):
             os.remove(
                 os.path.join(app.config["UPLOAD_FOLDER"], image_to_delete_from_pool)
             )
-        # [2] Delele the records in database files
+        # [2] Delete the records in database files
         delete_user_from_db(id)
         return redirect(url_for("fun_admin"))
     else:
@@ -234,7 +234,7 @@ def fun_add_user():
     if session.get("current_user", None) == "ADMIN":
         # before we add the user, we need to ensure this user
         # doesn't exist in database. We also need to ensure the id is valid.
-        if request.form.get("id").upper() in list_users():
+        if request.form.get("id") in list_users():
             user_list = list_users()
             user_table = zip(
                 range(1, len(user_list) + 1),
@@ -244,6 +244,7 @@ def fun_add_user():
             return render_template(
                 "admin.html", id_to_add_is_duplicated=True, users=user_table
             )
+
         if " " in request.form.get("id") or "'" in request.form.get("id"):
             user_list = list_users()
             user_table = zip(
@@ -254,6 +255,7 @@ def fun_add_user():
             return render_template(
                 "admin.html", id_to_add_is_invalid=True, users=user_table
             )
+
         else:
             add_user(request.form.get("id"), request.form.get("pw"))
             return redirect(url_for("fun_admin"))
