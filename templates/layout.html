@@ -42,8 +42,9 @@
                 </form>
         {% else %}
         <li>
-              <a><b>{{ session.get("current_user") }}</b></a></li>
-              <li><a href="{{ url_for('fun_logout') }}"><b><u>Logout</u></b></a>
+              <a><b>{{ session.get("current_user") | safe }}</b></a></li>
+              {# Only admins can set names so this is fine #}
+            <li><a href="{{ url_for('fun_logout') }}"><b><u>Logout</u></b></a>
           </li>
         {% endif %}
         </ul>
