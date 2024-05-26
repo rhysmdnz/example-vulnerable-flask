@@ -192,7 +192,7 @@ def fun_delete_image(image_uid):
 @app.route("/login", methods=["POST"])
 def fun_login():
     id_submitted = request.form.get("id").upper()
-    if (id_submitted in list_users()) and verify(id_submitted, request.form.get("pw")):
+    if verify(id_submitted, request.form.get("pw")):
         session["current_user"] = id_submitted
 
     return redirect(url_for("fun_root"))
