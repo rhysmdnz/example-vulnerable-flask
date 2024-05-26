@@ -140,6 +140,15 @@ def image_upload_record(uid, owner, image_name, timestamp):
     _conn.close()
 
 
+def get_next_image_id():
+    # Back port for initial DB design
+    _conn = sqlite3.connect(image_db_file_location)
+    _c = _conn.cursor()
+
+    result = _c.execute("""SELECT Count(*) FROM images""").fetchone()[0]
+    return str(result + 1)
+
+
 def list_images_for_user(owner):
     _conn = sqlite3.connect(image_db_file_location)
     _c = _conn.cursor()

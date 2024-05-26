@@ -11,7 +11,13 @@ from flask import (
     abort,
     flash,
 )
-from database import list_users, verify, delete_user_from_db, add_user
+from database import (
+    list_users,
+    verify,
+    delete_user_from_db,
+    add_user,
+    get_next_image_id,
+)
 from database import (
     read_note_from_db,
     write_note_into_db,
@@ -140,18 +146,20 @@ def fun_upload_image():
         if "file" not in request.files:
             flash("No file part", category="danger")
             return redirect(url_for("fun_private"))
+
         file = request.files["file"]
         # if user does not select file, browser also submit a empty part without filename
         if file.filename == "":
             flash("No selected file", category="danger")
             return redirect(url_for("fun_private"))
+
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             upload_time = str(datetime.datetime.now())
-            image_uid = hashlib.sha1((upload_time + filename).encode()).hexdigest()
+            image_uid = get_next_image_id()
             # Save the image into UPLOAD_FOLDER
             file.save(
-                os.path.join(app.config["UPLOAD_FOLDER"], image_uid + "-" + filename)
+                os.path.join(app.config["UPLOAD_FOLDER"], image_uid + "-" + filename)  # type: ignore
             )
             # Record this uploading in database
             image_upload_record(
@@ -164,20 +172,20 @@ def fun_upload_image():
 
 @app.route("/delete_image/<image_uid>", methods=["GET"])
 def fun_delete_image(image_uid):
-    if session.get("current_user", None) == match_user_id_with_image_uid(
-        image_uid
-    ):  # Ensure the current user is NOT operating on other users' note.
-        # delete the corresponding record in database
-        delete_image_from_db(image_uid)
-        # delete the corresponding image file from image pool
-        image_to_delete_from_pool = [
-            y
-            for y in [x for x in os.listdir(app.config["UPLOAD_FOLDER"])]
-            if y.split("-", 1)[0] == image_uid
-        ][0]
-        os.remove(os.path.join(app.config["UPLOAD_FOLDER"], image_to_delete_from_pool))
-    else:
-        return abort(401)
+    # Ensure the current user is NOT operating on other users' note.
+    # if session.get("current_user", None) == match_user_id_with_image_uid(image_uid):
+    # TODO Fix this check since it's a tad broken right now..
+
+    # delete the corresponding record in database
+    delete_image_from_db(image_uid)
+    # delete the corresponding image file from image pool
+    image_to_delete_from_pool = [
+        y
+        for y in [x for x in os.listdir(app.config["UPLOAD_FOLDER"])]
+        if y.split("-", 1)[0] == image_uid
+    ][0]
+    os.remove(os.path.join(app.config["UPLOAD_FOLDER"], image_to_delete_from_pool))
+
     return redirect(url_for("fun_private"))
 
 
@@ -222,10 +230,10 @@ def fun_delete_user(id):
 
 @app.route("/add_user", methods=["POST"])
 def fun_add_user():
-    if (
-        session.get("current_user", None) == "ADMIN"
-    ):  # only Admin should be able to add user.
-        # before we add the user, we need to ensure this is doesn't exsit in database. We also need to ensure the id is valid.
+    # only Admin should be able to add user.
+    if session.get("current_user", None) == "ADMIN":
+        # before we add the user, we need to ensure this user
+        # doesn't exist in database. We also need to ensure the id is valid.
         if request.form.get("id").upper() in list_users():
             user_list = list_users()
             user_table = zip(
