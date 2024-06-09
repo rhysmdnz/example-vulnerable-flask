@@ -17,6 +17,7 @@ from database import (
     delete_user_from_db,
     add_user,
     get_next_image_id,
+    user_is_admin,
 )
 from database import (
     read_note_from_db,
@@ -100,7 +101,7 @@ def fun_private():
 
 @app.route("/admin/")
 def fun_admin():
-    if session.get("current_user", None) == "ADMIN":
+    if user_is_admin(session.get("current_user", None)):
         user_list = list_users()
         user_table = zip(
             range(1, len(user_list) + 1),
@@ -206,8 +207,8 @@ def fun_logout():
 
 @app.route("/delete_user/<id>/", methods=["GET"])
 def fun_delete_user(id):
-    if session.get("current_user", None) == "ADMIN":
-        if id == "ADMIN":  # ADMIN account can't be deleted.
+    if user_is_admin(session.get("current_user", None)):
+        if id.upper() == "ADMIN":  # ADMIN account can't be deleted.
             return abort(403)
 
         # [1] Delete this user's images in image pool
@@ -231,7 +232,7 @@ def fun_delete_user(id):
 @app.route("/add_user", methods=["POST"])
 def fun_add_user():
     # only Admin should be able to add user.
-    if session.get("current_user", None) == "ADMIN":
+    if user_is_admin(session.get("current_user", None)):
         # before we add the user, we need to ensure this user
         # doesn't exist in database. We also need to ensure the id is valid.
         if request.form.get("id") in list_users():

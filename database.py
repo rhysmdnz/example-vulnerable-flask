@@ -68,6 +68,18 @@ def add_user(id, pw):
     _conn.close()
 
 
+def user_is_admin(_id) -> bool:
+    _conn = sqlite3.connect(user_db_file_location)
+    _c = _conn.cursor()
+
+    _c.execute("SELECT is_admin FROM users WHERE id = '" + _id + "'")
+    result = _c.fetchone()[0]
+
+    _conn.close()
+
+    return result == 1
+
+
 def read_note_from_db(id):
     _conn = sqlite3.connect(note_db_file_location)
     _c = _conn.cursor()

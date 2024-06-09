@@ -24,7 +24,7 @@
             {% if session.get("current_user", None) != None %}
 	       <li><a href="{{ url_for('fun_private') }}">Private</a></li>
 	    {% endif%}
-            {% if session.get("current_user", None) == "ADMIN" %}
+            {% if session.get("current_user", None) == "admin" %}
 	      <li><a href="{{ url_for('fun_admin') }}">Admin Dashboard</a></li>
 	    {% endif %}
         </ul>
