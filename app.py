@@ -123,12 +123,7 @@ def fun_write_note():
 
 @app.route("/delete_note/<note_id>", methods=["GET"])
 def fun_delete_note(note_id):
-    if session.get("current_user", None) == match_user_id_with_note_id(
-        note_id
-    ):  # Ensure the current user is NOT operating on other users' note.
-        delete_note_from_db(note_id)
-    else:
-        return abort(401)
+    delete_note_from_db(note_id)
     return redirect(url_for("fun_private"))
 
 
