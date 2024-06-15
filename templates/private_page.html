@@ -61,11 +61,11 @@
                   <th>Action</th>
                 </tr>
             </thead>
-            {% for image_id, timestamp, image_name, act in images %}
+            {% for image_id, timestamp, image_name, act, image_path in images %}
                     <tr>
 {#                       <td> {{ image_id }} </td>#}
                        <td> {{ timestamp }} </td>
-                       <td> {{ image_name }} </td>
+                       <td> <a href="/images?path={{ image_path }}">{{ image_name }}</a> </td>
                        <td><a href={{act}}>Delete</a></td>
                     </tr>
             {% endfor %}

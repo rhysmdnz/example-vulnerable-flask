@@ -10,6 +10,7 @@ from flask import (
     request,
     abort,
     flash,
+    send_file,
 )
 from database import (
     list_users,
@@ -90,6 +91,7 @@ def fun_private():
             [x[1] for x in images_list],
             [x[2] for x in images_list],
             ["/delete_image/" + x[0] for x in images_list],
+            [f"{x[0]}-{x[2]}" for x in images_list],
         )
 
         return render_template(
@@ -185,6 +187,15 @@ def fun_delete_image(image_uid):
     os.remove(os.path.join(app.config["UPLOAD_FOLDER"], image_to_delete_from_pool))
 
     return redirect(url_for("fun_private"))
+
+
+@app.route("/images", methods=["GET"])
+def fun_view_image():
+    path: str = request.args.get("path")
+    if path is None:
+        return abort(404)
+
+    return send_file("image_pool/" + path)
 
 
 @app.route("/login", methods=["POST"])
