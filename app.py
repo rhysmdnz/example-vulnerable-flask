@@ -127,12 +127,14 @@ def fun_delete_note(note_id):
     return redirect(url_for("fun_private"))
 
 
-# Reference: http://flask.pocoo.org/docs/0.12/patterns/fileuploads/
-ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif"}
-
-
 def allowed_file(filename):
-    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+    if "." not in filename:
+        return False
+
+    if "jpg" not in filename.lower():
+        return False
+
+    return True
 
 
 @app.route("/upload_image", methods=["POST"])
