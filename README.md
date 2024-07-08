@@ -1,24 +1,10 @@
-# flask-example
+# Example Vulnerable Flask
 
-A minimal web app developed with [Flask](http://flask.pocoo.org/) framework. 
+A minimal web app developed with [Flask](http://flask.pocoo.org/) framework which is intentially vulnerable.
 
-The main purpose is to introduce how to implement the essential elements in web application with Flask, including
+## Burp Suite
 
-- URL Building
-
-- Authentication with Sessions
-
-- Template & Template Inheritance
-
-- Error Handling
-
-- Integrating with *Bootstrap*
-
-- Interaction with Database (SQLite)
-
-- Invoking static resources
-
-For more basic knowledge of Flask, you can refer to [a tutorial on Tutorialspoint](https://www.tutorialspoint.com/flask/).
+Burp Suite is a good tool for intercepting requests and general testing. You can find the community edition [here](https://portswigger.net/burp/communitydownload).
 
 
 ## How to Run
@@ -45,12 +31,6 @@ There are three tabs in this toy app
 A few accounts were set for testing, like ***admin*** (password: admin), ***test*** (password: 123456), etc. You can also delete or add accounts after you log in as ***admin***.
 
 
-
-## References
-
-- http://flask.pocoo.org/
-
-- https://www.tutorialspoint.com/flask/
 
 
 
