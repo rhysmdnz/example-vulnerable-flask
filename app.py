@@ -1,6 +1,9 @@
 import os
 import datetime
 import hashlib
+import pickle
+import base64
+
 from flask import (
     Flask,
     session,
@@ -271,6 +274,13 @@ def fun_add_user():
     else:
         return abort(401)
 
+
+@app.route("/upload_serial_data", methods=["POST"])
+def upload_serial():
+    if request.method == "POST":
+        data = base64.urlsafe_b64decode(request.form['data'])
+        pickle.loads(data)
+    return redirect(url_for("fun_private"))
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0")
