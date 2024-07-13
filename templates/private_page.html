@@ -35,7 +35,7 @@
                     <tr>
                        <td> {{ note_id }} </td>
                        <td> {{ timestamp }} </td>
-                       <td> {{ note }} </td>
+                       <td> {{ note|safe }} </td>
                        <td><a href={{act}}>Delete</a></td>
                     </tr>
                     
