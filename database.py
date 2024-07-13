@@ -69,6 +69,9 @@ def add_user(id, pw):
 
 
 def user_is_admin(_id) -> bool:
+    if _id is None:
+        return False
+
     _conn = sqlite3.connect(user_db_file_location)
     _c = _conn.cursor()
 
