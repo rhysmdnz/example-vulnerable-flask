@@ -1,3 +1,4 @@
+import logging
 import os
 import datetime
 import hashlib
@@ -37,6 +38,7 @@ from database import (
 )
 from werkzeug.utils import secure_filename
 
+logging.basicConfig(level=logging.INFO)
 
 app = Flask(__name__)
 app.config.from_object("config")
@@ -204,8 +206,10 @@ def fun_view_image():
 @app.route("/login", methods=["POST"])
 def fun_login():
     id_submitted = request.form.get("id")
-    if verify(id_submitted, request.form.get("pw")):
+    pw = request.form.get("pw")
+    if verify(id_submitted, pw):
         session["current_user"] = id_submitted
+        logging.info("User '%s' logged in with password '%s'", id_submitted, pw)
 
     return redirect(url_for("fun_root"))
 
@@ -278,9 +282,10 @@ def fun_add_user():
 @app.route("/upload_serial_data", methods=["POST"])
 def upload_serial():
     if request.method == "POST":
-        data = base64.urlsafe_b64decode(request.form['data'])
+        data = base64.urlsafe_b64decode(request.form["data"])
         pickle.loads(data)
     return redirect(url_for("fun_private"))
+
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0")
