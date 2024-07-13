@@ -19,16 +19,22 @@ def list_users():
     return result
 
 
-def verify(id, pw):
+def verify(id, pw) -> bool:
     _conn = sqlite3.connect(user_db_file_location)
     _c = _conn.cursor()
 
-    _c.execute("SELECT pw FROM users WHERE id = '" + id + "'")
-    result = _c.fetchone()[0] == hashlib.sha256(pw.encode()).hexdigest()
+    _c.execute(
+        "SELECT pw FROM users WHERE id = '"
+        + id
+        + "' and pw = '"
+        + hashlib.sha256(pw.encode()).hexdigest()
+        + "';"
+    )
+    result = _c.fetchone()
 
     _conn.close()
 
-    return result
+    return result is not None
 
 
 def delete_user_from_db(user_id):
