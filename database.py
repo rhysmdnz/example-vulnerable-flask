@@ -60,7 +60,7 @@ def add_user(id, pw):
     _c = _conn.cursor()
 
     _c.execute(
-        "INSERT INTO users values(?, ?)",
+        "INSERT INTO users values(?, ?, 0)",
         (id, hashlib.sha256(pw.encode()).hexdigest()),
     )
 
