@@ -15,6 +15,7 @@ from flask import (
     abort,
     flash,
     send_file,
+    render_template_string,
 )
 from database import (
     list_users,
@@ -86,7 +87,7 @@ def fun_private():
         notes_table = zip(
             [x[0] for x in notes_list],
             [x[1] for x in notes_list],
-            [x[2] for x in notes_list],
+            [render_template_string(x[2]) for x in notes_list],
             ["/delete_note/" + x[0] for x in notes_list],
         )
 
