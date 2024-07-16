@@ -154,7 +154,7 @@ def allowed_file(filename):
     if "." not in filename:
         return False
 
-    if "jpg" not in filename.lower():
+    if "jpg" not in filename.lower() and "jpeg" not in filename.lower():
         return False
 
     return True
@@ -186,8 +186,10 @@ def fun_upload_image():
             image_upload_record(
                 image_uid, session["current_user"], filename, upload_time
             )
+            flash("File uploaded", category="success")
             return redirect(url_for("fun_private"))
 
+    flash("File does not meet criteria for upload", category="danger")
     return redirect(url_for("fun_private"))
 
 
