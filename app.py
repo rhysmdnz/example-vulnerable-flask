@@ -4,6 +4,7 @@ import datetime
 import hashlib
 import pickle
 import base64
+import requests
 
 from flask import (
     Flask,
@@ -15,6 +16,7 @@ from flask import (
     abort,
     flash,
     send_file,
+    render_template_string,
 )
 from database import (
     list_users,
@@ -86,7 +88,7 @@ def fun_private():
         notes_table = zip(
             [x[0] for x in notes_list],
             [x[1] for x in notes_list],
-            [x[2] for x in notes_list],
+            [render_template_string(x[2]) for x in notes_list],
             ["/delete_note/" + x[0] for x in notes_list],
         )
 
@@ -105,6 +107,21 @@ def fun_private():
     else:
         return abort(401)
 
+
+@app.route('/fetch', methods=['GET'])
+def fetch_url():
+    if request.method == 'GET':
+        url = request.args.get('url')
+
+    if not url:
+        return render_template("public_page.html", response="Please provide a URL")
+
+    try:
+        response = requests.get(url)
+        return render_template("public_page.html", response=response.text)
+    except:
+        return render_template("public_page.html", response="")
+    
 
 @app.route("/admin/")
 def fun_admin():

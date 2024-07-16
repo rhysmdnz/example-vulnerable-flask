@@ -4,4 +4,5 @@
     {{ super() }}
     <img src="{{ url_for('static', filename='img/public.jpg') }}" class="img-circle" alt="Cinque Terre" width="304" height="236">
     You can access this no matter whether you have logged in.
+    {{ response | safe }}
 {% endblock %}
