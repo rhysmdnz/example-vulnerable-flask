@@ -40,14 +40,14 @@ def verify(id, pw) -> bool:
 def delete_user_from_db(user_id):
     _conn = sqlite3.connect(user_db_file_location)
     _c = _conn.cursor()
-    _c.execute("DELETE FROM users WHERE id = ?", (user_id))
+    _c.execute("DELETE FROM users WHERE id = ?", (user_id,))
     _conn.commit()
     _conn.close()
 
     # when we delete a user FROM database USERS, we also need to delete all his or her notes data FROM database NOTES
     _conn = sqlite3.connect(note_db_file_location)
     _c = _conn.cursor()
-    _c.execute("DELETE FROM notes WHERE user = ?", (user_id))
+    _c.execute("DELETE FROM notes WHERE user = ?", (user_id,))
     _conn.commit()
     _conn.close()
 
@@ -56,7 +56,7 @@ def delete_user_from_db(user_id):
     # [2] delete all his or her images records FROM database IMAGES
     _conn = sqlite3.connect(image_db_file_location)
     _c = _conn.cursor()
-    _c.execute("DELETE FROM images WHERE owner = ?;", (user_id))
+    _c.execute("DELETE FROM images WHERE owner = ?;", (user_id,))
     _conn.commit()
     _conn.close()
 
