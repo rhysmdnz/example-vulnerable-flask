@@ -141,7 +141,7 @@ def delete_note_from_db(note_id):
     _conn = sqlite3.connect(note_db_file_location)
     _c = _conn.cursor()
 
-    _c.execute("DELETE FROM notes WHERE note_id = ?;", (note_id))
+    _c.execute("DELETE FROM notes WHERE note_id = ?;", (note_id,))
 
     _conn.commit()
     _conn.close()
